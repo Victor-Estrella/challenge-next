@@ -1,0 +1,17 @@
+.box:before {
+  position: absolute;
+  content: "";
+  top: -10px;
+  height: 2px;
+  width: 100%;
+  background: #1a1a1a;
+}
+
+.box:after {
+  position: absolute;
+  content: "";
+  height: 2px;
+  width: 15%;
+  background: #020fff;
+  top: -10px;
+}
