@@ -4,7 +4,7 @@ import Mecanicos from '../../../public/img/mecanicos.svg'
 
 export default function Funcionalidade() {
     return (
-        <section className="flex flex-col items-center mb-32">
+        <section className="flex flex-col items-center ">
             <Faixa/>
             <div className="flex justify-center w-full">
                 <h1 className="text-4xl font-bold mt-6 mb-10 text-azulclaro min-[460px]:text-5xl md:text-6xl lg:text-7xl lg:mt-10">Funcionalidade</h1>

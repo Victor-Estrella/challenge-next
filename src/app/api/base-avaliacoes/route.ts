@@ -4,7 +4,7 @@ export async function GET() {
 
     //REcuperando os dados da API JAVA
     try {
-        const response = await fetch("http://192.168.0.13:8080/megafarma");
+        const response = await fetch("http://192.168.0.13:8080/avaliacao");
         const data = await response.json();
         return NextResponse.json(data);
     } catch (error) {

@@ -1,7 +1,6 @@
 export type TipoAvaliacao = {
-    codigo: number;
-    nome: string;
-    preco: number;
-    dataDeFabricacao: string;
-    datadeValidade: string;
+    idAvaliacao: number;
+    nomeCliente: string;
+    avaliacao: number;
+    comentario: string;
 }
