@@ -50,14 +50,14 @@ export default function CadastroLogin() {
     const handleLoginSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validateLogin()) {
-            router.push('/funcionalidade'); // Use router para navegar para a página de funcionalidade
+            router.push('/funcionalidade');
         }
     };
 
     const handleRegisterSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validateRegister()) {
-            router.push('/funcionalidade'); // Navegação após o cadastro
+            router.push('/funcionalidade');
         }
     };
 
