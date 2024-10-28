@@ -1,42 +1,35 @@
-"use client"
+"use client";
+import { TipoCarro } from '@/type';
 import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 
-type Car = {
-  modelo: string;
-  ano: string;
-  quilometragem: string;
-  marca: string;
-}
-
 export default function AddCarro() {
-  const [formData, setFormData] = useState<Car>({
+  const [formData, setFormData] = useState<TipoCarro>({
     modelo: '',
     ano: '',
     quilometragem: '',
     marca: ''
   });
 
-  const [cars, setCars] = useState<Car[]>([]);
+  const [carros, setCarros] = useState<TipoCarro[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [error2, setError2] = useState<string | null>(null);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedCars = sessionStorage.getItem('cars');
-      if (storedCars) {
-        setCars(JSON.parse(storedCars));
-      }
+  const fetchCars = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/carros');
+      if (!response.ok) throw new Error('Erro ao carregar os carros.');
+      const data = await response.json();
+      setCarros(data);
+    } catch (err) {
+      console.error(err);
     }
+  };
+
+  useEffect(() => {
+    fetchCars();
   }, []);
   
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('cars', JSON.stringify(cars));
-    }
-  }, [cars]);
-  
-
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -47,7 +40,7 @@ export default function AddCarro() {
     if (ano < 1969) {
       return 'O ano não pode ser menor que 1969.';
     } else if (ano > anoAtual + 1) {
-      return 'O ano não pode ser maior que o ano atual mais um.';
+      return 'O ano não pode ser maior que o ano atual mais dois.';
     }
     return null;
   };
@@ -59,7 +52,7 @@ export default function AddCarro() {
     return null;
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const ano = parseInt(formData.ano, 10);
@@ -78,32 +71,68 @@ export default function AddCarro() {
     setError(null);
     setError2(null);
 
-    if (editingIndex !== null) {
-      const updatedCars = cars.map((car, index) =>
-        index === editingIndex ? formData : car
-      );
-      setCars(updatedCars);
-      setEditingIndex(null);
-    } else {
-      setCars([...cars, formData]);
-    }
+    try {
+      if (editingIndex !== null) {
+        // Atualiza o carro existente
+        const response = await fetch(`http://localhost:8080/carros/${formData.idCarro}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        if (!response.ok) throw new Error('Erro ao atualizar o carro.');
+      } else {
+        // Adiciona um novo carro
+        const response = await fetch('http://localhost:8080/carros', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        if (!response.ok) throw new Error('Erro ao adicionar o carro.');
+      }
 
-    setFormData({
-      modelo: '',
-      ano: '',
-      quilometragem: '',
-      marca: ''
-    });
+      // Recarrega a lista de carros
+      fetchCars();
+      setFormData({
+        modelo: '',
+        ano: '',
+        quilometragem: '',
+        marca: ''
+      });
+      setEditingIndex(null);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleEdit = (index: number) => {
-    setFormData(cars[index]);
+  const EditarCarro = (index: number) => {
+    const carToEdit = carros[index];
+    setFormData({
+      idCarro: carToEdit.idCarro,
+      modelo: carToEdit.modelo,
+      ano: carToEdit.ano.toString(),
+      quilometragem: carToEdit.quilometragem.toString(),
+      marca: carToEdit.marca
+    });
     setEditingIndex(index);
   };
 
-  const handleDelete = (index: number) => {
-    const updatedCars = cars.filter((_, i) => i !== index);
-    setCars(updatedCars);
+  const DeletarCarro = async (index: number) => {
+    const carToDelete = carros[index];
+    try {
+      const response = await fetch(`http://localhost:8080/carros/${carToDelete.idCarro}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Erro ao deletar o carro.');
+
+      // Recarrega a lista de carros
+      fetchCars();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -143,14 +172,14 @@ export default function AddCarro() {
       <div className='p-4'>
         <h3 className="text-xl lg:text-3xl font-bold mb-4">Lista de Carros</h3>
         <ul className="space-y-4">
-          {cars.map((car, index) => (
+          {carros.map((carro, index) => (
             <li key={index} className="p-4 border border-gray-300 rounded-md bg-gray-200">
-              <h4 className="font-semibold text-xl lg:text-2xl">{car.modelo} ({car.ano})</h4>
-              <p className='text-black text-base'><strong>Marca:</strong> {car.marca}</p>
-              <p className='text-black text-base'><strong>Quilometragem:</strong> {car.quilometragem} km</p>
+              <h4 className="font-semibold text-xl lg:text-2xl">{carro.modelo} ({carro.ano})</h4>
+              <p className='text-black text-base'><strong>Marca:</strong> {carro.marca}</p>
+              <p className='text-black text-base'><strong>Quilometragem:</strong> {carro.quilometragem} km</p>
               <div className="mt-2 flex space-x-2">
-                <button onClick={() => handleEdit(index)} className="bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600">Editar</button>
-                <button onClick={() => handleDelete(index)} className="bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-600">Apagar</button>
+                <button onClick={() => EditarCarro(index)} className="bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600">Editar</button>
+                <button onClick={() => DeletarCarro(index)} className="bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-600">Deletar</button>
               </div>
             </li>
           ))}
