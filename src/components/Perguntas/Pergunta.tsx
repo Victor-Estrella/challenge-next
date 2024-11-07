@@ -1,4 +1,3 @@
-
 export default function Perguntas() {
     return (
         <section className="flex flex-col items-center w-full my-20">

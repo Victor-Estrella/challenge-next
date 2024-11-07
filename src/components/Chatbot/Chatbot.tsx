@@ -1,30 +1,41 @@
+"use client"
 import { useEffect } from 'react';
+
+interface WatsonAssistantOptions {
+  integrationID: string;
+  region: string;
+  serviceInstanceID: string;
+  onLoad: (instance: { render: () => Promise<void> }) => Promise<void>;
+  clientVersion?: string; // Tornar clientVersion opcional
+}
+
+declare global {
+  interface Window {
+    watsonAssistantChatOptions?: WatsonAssistantOptions;
+  }
+}
 
 export default function Chatbot() {
   useEffect(() => {
-    // Definir as opções de integração do Watson Assistant
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).watsonAssistantChatOptions = {
-      integrationID: "3b857cc3-c398-4e0d-8083-5cac9fa83e68",
-      region: "us-south", // A região onde a integração está hospedada.
-      serviceInstanceID: "077bc520-e9dd-420e-b5db-fc1ec03356ea",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onLoad: async (instance: any) => { await instance.render(); }
+    // Definindo as opções do Watson Assistant
+    window.watsonAssistantChatOptions = {
+      integrationID: "b282140d-9ec1-4e31-b233-356034ce8636",
+      region: "us-south",
+      serviceInstanceID: "4895944c-12f0-4b43-9a58-2390e3fc6fd0",
+      onLoad: async (instance) => { await instance.render(); }
     };
 
-    // Adicionar o script do Watson Assistant ao cabeçalho da página
-    setTimeout(() => {
-      const t = document.createElement('script');
-      t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + 
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              ((window as any).watsonAssistantChatOptions.clientVersion || 'latest') + 
-              "/WatsonAssistantChatEntry.js";
-      document.head.appendChild(t);
-    });
+    // Função para carregar o script do Watson Assistant
+    const script = document.createElement('script');
+    script.src = `https://web-chat.global.assistant.watson.appdomain.cloud/versions/${window.watsonAssistantChatOptions.clientVersion || 'latest'}/WatsonAssistantChatEntry.js`;
+    script.async = true;
+    document.head.appendChild(script);
+
+    // Limpeza do efeito ao desmontar o componente
+    return () => {
+      document.head.removeChild(script);
+    };
   }, []);
 
-  return (
-    <>
-    </>
-  );
+  return null; // Esse componente não precisa renderizar nada na tela
 }

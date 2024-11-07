@@ -16,6 +16,7 @@ export default function CadastroLogin() {
     const [registerName, setRegisterName] = useState<string>('');
     const [registerEmail, setRegisterEmail] = useState<string>('');
     const [registerPhone, setRegisterPhone] = useState<string>('');
+    const [registerCep, setRegisterCep] = useState<string>('');
     const [registerDate, setRegisterDate] = useState<string>('');
     const [registerPassword, setRegisterPassword] = useState<string>('');
     const [registerErrors, setRegisterErrors] = useState<{ name?: string, email?: string, phone?: string, password?: string }>({});
@@ -39,11 +40,12 @@ export default function CadastroLogin() {
     };
 
     const validateRegister = (): boolean => {
-        const errors: { name?: string, email?: string, phone?: string, date?: string, password?: string } = {};
+        const errors: { name?: string, email?: string, phone?: string, cep?: string, date?: string, password?: string } = {};
         
         if (!registerName) errors.name = 'Nome é obrigatório';
         if (!registerEmail) errors.email = 'Email é obrigatório';
         if (!registerPhone) errors.phone = 'Telefone é obrigatório';
+        if (!registerCep) errors.cep = 'CEP é obrigatório';
         if (!registerDate) errors.date = 'Data de Nascimento é obrigatória';
         if (!registerPassword) {
             errors.password = 'Senha é obrigatória';
@@ -92,6 +94,7 @@ export default function CadastroLogin() {
                 nomeCompleto: registerName,
                 email: registerEmail,
                 numeroTelefone: registerPhone,
+                cep: registerCep,
                 dataNascimento: registerDate,
                 senha: registerPassword,
             };
@@ -131,6 +134,8 @@ export default function CadastroLogin() {
                         setEmail={setRegisterEmail}
                         phone={registerPhone}
                         setPhone={setRegisterPhone}
+                        cep={registerCep}
+                        setCep={setRegisterCep}
                         date={registerDate}
                         setDate={setRegisterDate}
                         password={registerPassword}
@@ -158,7 +163,7 @@ export default function CadastroLogin() {
     return (
         <main className={`h-screen w-screen max-w-screen-min-2000 flex justify-center container ${rightPanel ? "right-panel-active" : ""}`} id="container">
             {/* Tela Mobile / Tablet */}
-            <div className="lg:hidden w-full flex flex-col items-center mt-6">
+            <div className="lg:hidden w-full flex flex-col items-center h-full mt-6">
                 {renderMobileView()}
             </div>
 
@@ -180,6 +185,8 @@ export default function CadastroLogin() {
                     setEmail={setRegisterEmail}
                     phone={registerPhone}
                     setPhone={setRegisterPhone}
+                    cep={registerCep}
+                    setCep={setRegisterCep}
                     date={registerDate}
                     setDate={setRegisterDate}
                     password={registerPassword}

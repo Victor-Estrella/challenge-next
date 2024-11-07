@@ -35,12 +35,12 @@ export default function Footer() {
         <div className="w-full py-2 px-4 lg:w-1/2">
           <h2 className="text-base md:text-lg font-semibold uppercase pl-4">Redes sociais</h2>
           <div className="box relative mx-auto py-2 px-4 mt-4">
-            <Image src={Logo} className="h-12 my-6 w-1/6" alt="Logo da Porto"/>
+            <Image src={Logo} className="h-12 my-6 w-1/2 md:w-1/6" alt="Logo da Porto"/>
             <p className="font-bold text-lg">Acompanhe a Porto nas redes sociais</p>
-            <div className="mt-4 flex gap-28 justify-center">
-              <a href="https://www.linkedin.com/company/porto" className="flex lg:hover:bg-slate-400" target="_blank" rel="noopener noreferrer"><Image src={Linkedin} className="h-12 m-2 w-full" alt=""/></a>
-              <a href="https://www.facebook.com/porto" className="flex lg:hover:bg-slate-400" target="_blank" rel="noopener noreferrer"><Image src={Facebook} className="h-12 m-2 w-full" alt=""/></a>
-              <a href="https://www.instagram.com/porto/" className="flex lg:hover:bg-slate-400" target="_blank" rel="noopener noreferrer"><Image src={Instagram} className="h-12 m-2 w-full" alt=""/></a>     
+            <div className="mt-4 flex gap-12 md:gap-28 justify-center">
+              <a href="https://www.linkedin.com/company/porto" className="flex lg:hover:bg-slate-400" target="_blank" rel="noopener noreferrer"><Image src={Linkedin} className="h-8 md:h-12 m-2 w-full" alt="Logo do Linkedin"/></a>
+              <a href="https://www.facebook.com/porto" className="flex lg:hover:bg-slate-400" target="_blank" rel="noopener noreferrer"><Image src={Facebook} className="h-8 md:h-12 m-2 w-full" alt="Logo do Facebook"/></a>
+              <a href="https://www.instagram.com/porto/" className="flex lg:hover:bg-slate-400" target="_blank" rel="noopener noreferrer"><Image src={Instagram} className="h-8 md:h-12 m-2 w-full" alt="Logo do Instagram"/></a>     
             </div>
           </div>
         </div>
